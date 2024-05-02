@@ -11,7 +11,8 @@ import hpp from "hpp";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { AppDataSource } from "./data-source";
-import * as process from "process";
+import routesAuth from "./routes/auth";
+import routesUser from "./routes/users";
 
 const app: Express = express();
 
@@ -22,15 +23,26 @@ app.use(compression());
 app.use(helmet());
 app.use(hpp());
 
+app.use("/api/auth", routesAuth);
+app.use("/api/users", routesUser);
+
 app.get("/", (req, res) => {
   res.send("Hello from server!");
 });
 
-const PORT: number = parseInt(process.env.PORT || "3000", 10);
+app.use((req, res) => {
+  console.error(res);
+  res.status(400).send("Bad Request!+");
+});
+app.use((req, res) => {
+  console.error(res);
+  res.status(500).send("Something broke!");
+});
+
+const PORT: number = parseInt(process.env.PORT || "4400", 10);
 
 AppDataSource.initialize()
   .then(async () => {
-    console.log("Hi");
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
