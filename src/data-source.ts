@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "./entities/users.entity";
+import { RefreshToken } from "./entities/refresh-tokens.entity";
 import * as process from "process";
 
 export const AppDataSource = new DataSource({
@@ -12,5 +13,5 @@ export const AppDataSource = new DataSource({
   database: process.env.POSTGRES_DB,
   synchronize: true,
   logging: false,
-  entities: [User],
+  entities: [User, RefreshToken],
 });
