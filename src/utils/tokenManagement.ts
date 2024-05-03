@@ -10,3 +10,16 @@ export const storeRefreshToken = async (userId: number, token: string) => {
     expireDate,
   });
 };
+
+export const retrieveRefreshToken = async (token: string) => {
+  const refreshToken = await RefreshToken.findOne({
+    where: { token },
+  });
+
+  if (!refreshToken || refreshToken.expireDate <= new Date()) return null;
+  return refreshToken.token;
+};
+
+export const removeRefreshToken = async (token: string) => {
+  await RefreshToken.delete({ token });
+};
