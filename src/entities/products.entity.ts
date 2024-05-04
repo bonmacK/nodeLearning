@@ -9,29 +9,27 @@ import {
   ManyToMany,
   JoinTable,
 } from "typeorm";
-import { Product } from "./products.entity";
+import { User } from "./users.entity";
+import user from "../routes/user";
 
-@Entity({ name: "User" })
-export class User extends BaseEntity {
+@Entity({ name: "products" })
+export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column({ type: "varchar", length: 128, nullable: false })
   name!: string;
 
-  @Column({ type: "varchar", length: 128, unique: true, nullable: false })
-  email!: string;
+  @Column({ type: "varchar", length: 128, nullable: false })
+  color!: string;
 
-  @Column({ type: "varchar", length: 128, unique: true, nullable: false })
-  password!: string;
-
-  @ManyToMany(() => Product, { cascade: true })
+  @ManyToMany(() => User, (user) => user.products)
   @JoinTable({
     name: "user_products",
-    joinColumn: { name: "user_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "product_id", referencedColumnName: "id" },
+    joinColumn: { name: "product_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "user_id", referencedColumnName: "id" },
   })
-  products: Product[];
+  users: User[];
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createAt: Date;
@@ -44,5 +42,5 @@ export class User extends BaseEntity {
   updatedAt: Date;
 
   @DeleteDateColumn({ type: "timestamp", nullable: true })
-  deletedAt: Date;
+  deletedAt: Date | null;
 }
