@@ -1,0 +1,423 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "REST API"
+  description: "Store server docs"
+
+securityDefinitions:
+  bearerAuth:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+    description: "Bearer authentication with JWT"
+
+security:
+  - bearerAuth: []
+
+paths:
+  /:
+    get:
+      summary: "Root endpoint"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: string
+            example: "Hello from server!"
+
+  /api/auth/register:
+    post:
+      tags: ["AUTH"]
+      summary: "User registration route"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Registration was successful!"
+              userId:
+                type: number
+                example: 1
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+
+  /api/auth/login:
+    post:
+      tags: ["AUTH"]
+      summary: "User login route"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: credentials
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: "steveJobs@icloud.com"
+              password:
+                type: string
+                example: "password"
+      responses:
+        200:
+          description: "Logged in"
+          schema:
+            type: object
+            properties:
+              accessToken:
+                type: string
+                example: "ImlhdCI6MTcxMzk2ODI5NSwiZXhwIjoxNz3I"
+              refreshToken:
+                type: string
+                example: "ImlhdCI6MTcxMzk2ODI5NSwiZXhwIjoxNz3I"
+        400:
+          description: "User not found!"
+        500:
+          description: "Server Error!"
+
+  /api/auth/token:
+    post:
+      tags: ["AUTH"]
+      summary: "Refresh token route"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: token
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                example: "CI6MTcxMzk2ODI5NSwiZX"
+      responses:
+        200:
+          description: "Refreshed"
+          schema:
+            type: object
+            properties:
+              accessToken:
+                type: string
+                example: "ImlhdCI6MTcxMzk2ODI5NSwiZXhwIjoxNz3I"
+              refreshToken:
+                type: string
+                example: "ImlhdCI6MTcxMzk2ODI5NSwiZXhwIjoxNz3I"
+        401:
+          description: "User not found!"
+        403:
+          description: "User not found!"
+        500:
+          description: "Server Error!"
+
+  /api/auth/logout:
+    delete:
+      tags: ["AUTH"]
+      summary: "Logout user route"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        201:
+          description: "User was deleted"
+          schema:
+            type: string
+            properties:
+              message:
+                type: string
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+
+  /api/users:
+    get:
+      tags: ["USERS"]
+      summary: "Get all users route"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  $ref: "#/definitions/User"
+              count:
+                type: integer
+                example: 2
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+      security:
+        - bearerAuth: []
+
+    post:
+      tags: ["USERS"]
+      summary: "Create user route"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: credentials
+          schema:
+            type: object
+            required:
+              - email
+              - password
+              - name
+            properties:
+              email:
+                type: string
+                example: "email@gmail.com"
+              password:
+                type: string
+                example: "password"
+              name:
+                type: string
+                example: "name"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/definitions/User"
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+      security:
+        - bearerAuth: []
+
+  /api/users/{id}:
+    patch:
+      tags: ["USERS"]
+      summary: "Update user route"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: number
+        - in: body
+          name: credentials
+          schema:
+            type: object
+            required:
+              - email
+              - password
+              - name
+            properties:
+              email:
+                type: string
+                example: "steveJobs@icloud.com"
+              password:
+                type: string
+                example: "password"
+              name:
+                type: string
+                example: "name"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/definitions/User"
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+      security:
+        - bearerAuth: []
+
+  /api/users/{id}/add-product/{productId}:
+    post:
+      tags: ["USERS"]
+      summary: "Add product to user route"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: number
+        - in: path
+          name: productId
+          required: true
+          type: number
+        - in: body
+          name: credentials
+          schema:
+            type: object
+            required:
+              - userId
+              - productId
+            properties:
+              userId:
+                type: number
+                example: 3
+              productId:
+                type: number
+                example: 3
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/definitions/Product"
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+      security:
+        - bearerAuth: []
+
+  /api/products:
+    get:
+      tags: ["PRODUCTS"]
+      summary: "Get all products route"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: object
+            properties:
+              products:
+                type: array
+                items:
+                  $ref: "#/definitions/Product"
+              count:
+                type: integer
+                example: 2
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+      security:
+        - bearerAuth: []
+
+    post:
+      tags: ["PRODUCTS"]
+      summary: "Create product route"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: credentials
+          schema:
+            type: object
+            required:
+              - name
+              - color
+            properties:
+              name:
+                type: string
+                example: "product"
+              color:
+                type: string
+                example: "color"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/definitions/Product"
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+      security:
+        - bearerAuth: []
+
+  /api/products/{id}:
+    get:
+      tags: ["PRODUCTS"]
+      summary: "Get product by id route"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: number
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/definitions/Product"
+        400:
+          description: "Bad request!"
+        500:
+          description: "Server Error!"
+      security:
+        - bearerAuth: []
+
+definitions:
+  User:
+    type: object
+    required:
+      - email
+      - password
+      - name
+    properties:
+      email:
+        type: string
+        example: "steveJobs@icloud.com"
+      password:
+        type: string
+        example: "password"
+      name:
+        type: string
+        example: "name"
+
+  Product:
+    type: object
+    required:
+      - name
+      - color
+    properties:
+      name:
+        type: string
+        example: "name"
+      color:
+        type: string
+        example: "color"
