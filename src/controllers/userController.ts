@@ -21,8 +21,13 @@ export const createUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userDto: CreateUserDto = req.body;
-    const user = await userService.createUser(userDto);
+    const { email, name, password, roleId }: CreateUserDto = req.body;
+    const user = await userService.createUser({
+      email,
+      name,
+      password,
+      userRoleId: roleId,
+    });
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -37,6 +42,21 @@ export const updateUser = async (
     const id = +req.params.id;
     const userDto = req.body;
     const user = await userService.updateUser(id, userDto);
+
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateUserRole = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const id = +req.params.id;
+    const userDto = req.body;
+    const user = await userService.updateUserRole(id, userDto);
 
     res.status(200).json({ user });
   } catch (error) {

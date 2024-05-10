@@ -14,6 +14,7 @@ import { AppDataSource } from "./data-sourсe";
 import routesAuth from "./routes/auth";
 import routesUser from "./routes/user";
 import routesProduct from "./routes/product";
+import routesRoles from "./routes/roles";
 import morgan from "morgan";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", routesAuth);
 app.use("/api/users", routesUser);
 app.use("/api/products", routesProduct);
+app.use("/api/roles", routesRoles);
 
 app.get("/", (req, res) => {
   res.send("Hello from server!");

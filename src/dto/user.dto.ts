@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional } from "class-validator";
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from "class-validator";
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -11,6 +11,14 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   public name: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  public roleId?: number;
+
+  @IsNumber()
+  @IsOptional()
+  public userRoleId?: number;
 }
 
 export class UpdateUserDto {
@@ -22,4 +30,10 @@ export class UpdateUserDto {
 
   @IsOptional()
   public name: string;
+}
+
+export class UpdateUserRoleDto {
+  @IsNumber()
+  @IsNotEmpty()
+  public roleId: number;
 }

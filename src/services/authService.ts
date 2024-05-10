@@ -17,6 +17,7 @@ export const registerUser = async (registerUserData: any) => {
     name,
     email,
     password: hashedPassword,
+    userRoleId: 2,
   });
   return newUser;
 };

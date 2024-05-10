@@ -189,6 +189,7 @@ paths:
               - email
               - password
               - name
+              - roleId
             properties:
               email:
                 type: string
@@ -199,6 +200,9 @@ paths:
               name:
                 type: string
                 example: "name"
+              roleId:
+                type: number
+                example: 1
       responses:
         200:
           description: "Ok"
@@ -408,6 +412,21 @@ definitions:
       name:
         type: string
         example: "name"
+      userRoleId:
+        type: number
+        example: 1
+      id:
+        type: number
+        example: 1
+      createAt:
+        type: string
+        example: "2024-05-02T16:37:35.362Z"
+      updatedAt:
+        type: string
+        example: "2024-05-02T16:37:35.362Z"
+      deletedAt:
+        type: string
+        example: "2024-05-02T16:37:35.362Z"
 
   Product:
     type: object
@@ -421,3 +440,15 @@ definitions:
       color:
         type: string
         example: "color"
+      id:
+        type: number
+        example: 1
+      createAt:
+        type: string
+        example: "2024-05-02T16:37:35.362Z"
+      updatedAt:
+        type: string
+        example: "2024-05-02T16:37:35.362Z"
+      deletedAt:
+        type: string
+        example: "2024-05-02T16:37:35.362Z"

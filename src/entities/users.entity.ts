@@ -8,8 +8,11 @@ import {
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
+  ManyToOne,
 } from "typeorm";
 import { Product } from "./products.entity";
+import { JoinColumn } from "typeorm";
+import { Role } from "./roles.entity";
 
 @Entity({ name: "User" })
 export class User extends BaseEntity {
@@ -32,6 +35,13 @@ export class User extends BaseEntity {
     inverseJoinColumn: { name: "product_id", referencedColumnName: "id" },
   })
   products: Product[];
+
+  @Column({ type: "integer", nullable: true })
+  userRoleId!: number;
+
+  @ManyToOne(() => Role, { cascade: true })
+  @JoinColumn({ name: "userRoleId" })
+  role: Role;
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createAt: Date;
